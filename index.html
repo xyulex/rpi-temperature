@@ -1,0 +1,48 @@
+<html>
+
+<head>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+
+<script>
+// load the visualization library from Google and set a listener
+google.load("visualization", "1", {packages:["corechart", "bar"]});
+google.setOnLoadCallback(drawChart);
+
+// this has to be a global function
+function drawChart() {
+   // grab the CSV
+   $.get("mediciones.csv", function(csvString) {
+	var items = $.csv.toObjects(csvString);
+
+        var data = new google.visualization.DataTable();
+  data.addColumn('datetime','Time');
+  data.addColumn('number','Temperatura (C)');
+  data.addColumn('number','Humedad (%)');
+
+ 
+  for (var i = 0; i < items.length; i++){
+   var timestamp = items[i]['fecha']+ " " + items[i]['hora'];
+   var Temperatura = items[i]['temperatura'];
+   var Humedad = items[i]['humedad'];
+   data.addRow([new Date(timestamp), parseInt(Temperatura), parseInt(Humedad)]);
+  };
+    
+   
+        var options = {   
+          title: 'Temperatura y Humedad', legend: { position: 'top' },
+          curveType: 'function', colors: ['red', 'blue'],
+          series: {0: {targetAxisIndex: 0}, 1: {targetAxisIndex: 1}}
+        };
+ 
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart')); 
+
+        chart.draw(data, options);
+  });
+}
+</script>
+</head>
+<div id="curve_chart" style="height:600px"></div>
+</html>
+
