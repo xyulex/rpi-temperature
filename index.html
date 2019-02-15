@@ -7,7 +7,7 @@
 
 <script>
 // load the visualization library from Google and set a listener
-google.load("visualization", "1", {packages:["corechart", "bar"]});
+google.load("visualization", "1", {packages:["corechart", "bar"], 'language': 'es'});
 google.setOnLoadCallback(drawChart);
 
 // this has to be a global function
@@ -17,7 +17,7 @@ function drawChart() {
 	var items = $.csv.toObjects(csvString);
 
         var data = new google.visualization.DataTable();
-  data.addColumn('datetime','Time');
+  data.addColumn('string','Time');
   data.addColumn('number','Temperatura (C)');
   data.addColumn('number','Humedad (%)');
 
@@ -26,7 +26,9 @@ function drawChart() {
    var timestamp = items[i]['fecha']+ " " + items[i]['hora'];
    var Temperatura = items[i]['temperatura'];
    var Humedad = items[i]['humedad'];
-   data.addRow([new Date(timestamp), parseInt(Temperatura), parseInt(Humedad)]);
+   var date = new  Date(timestamp);
+   var FechaFormateada = date.getDate() + '/' +  (date.getMonth() + 1);
+   data.addRow([FechaFormateada, parseInt(Temperatura), parseInt(Humedad)]);
   };
     
    
